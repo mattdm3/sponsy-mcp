@@ -51,9 +51,9 @@ Add the following config:
 {
   "mcpServers": {
     "sponsy-server": {
-        "command": "/Users/home/.nvm/versions/node/v22.20.0/bin/node",
+        "command": "path_to_nodejs", //ie "/Users/home/.nvm/versions/node/v22.20.0/bin/node",
         "args": [
-                "/Users/home/sponsy-mcp/dist/index.js"
+                "path_to_index.js"// ie "/Users/home/sponsy-mcp/dist/index.js"
                 ],
         "env": {
               "NODE_OPTIONS": "--no-deprecation"
