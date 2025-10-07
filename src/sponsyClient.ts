@@ -19,7 +19,7 @@ const applicationError = {
     url: "",
     error: "application_error",
     statusCode: 0,
-    message: ["Unable to fetch data. The request could not be resolved."],
+    message: "Unable to fetch data. The request could not be resolved.",
   },
 };
 
@@ -39,6 +39,10 @@ export class SponsyClient {
     });
   }
 
+  /**
+   * Appends query parameters to the URL using URLSearchParams for correct formatting.
+   * Ensures the first parameter is prefixed with '?' and subsequent ones with '&'.
+   */
   private buildUrlWithParams(
     path: string,
     params: Record<string, string> | undefined = {}
@@ -47,11 +51,16 @@ export class SponsyClient {
     if (!params) {
       return url;
     }
-    Object.entries(params).forEach(([key, value], index) => {
-      if (value) {
-        url += `${index === 0 ? "?" : "&"}${key}=${value}`;
-      }
-    });
+    const query = Object.entries(params ?? {})
+      .filter(
+        ([, value]) => value !== undefined && value !== null && value !== ""
+      )
+      .map(
+        ([key, value]) =>
+          `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+      )
+      .join("&");
+    if (query) url += `?${query}`;
     return url;
   }
 
@@ -67,14 +76,15 @@ export class SponsyClient {
       if (!response.ok) {
         try {
           const rawError = await response.text();
-          return { data: null, error: JSON.parse(rawError) };
+
+          return { data: null, error: JSON.parse(rawError) as ErrorResponse };
         } catch (err) {
           if (err instanceof SyntaxError) {
             return applicationError;
           }
 
           const error: ErrorResponse = {
-            message: [response.statusText],
+            message: response.statusText,
             error: "application_error",
             statusCode: 0,
           };
@@ -117,6 +127,7 @@ export class SponsyClient {
     limit?: string;
   }) {
     const { publicationId, ...rest } = props;
+
     const responseType = createGenericSponsyResponse(Slot);
     return this.get<z.infer<typeof responseType>>(
       `/publications/${publicationId}/slots`,

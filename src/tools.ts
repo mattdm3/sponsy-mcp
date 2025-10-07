@@ -136,9 +136,17 @@ export function buildTools() {
         const client = new SponsyClient({ apiKey });
 
         if (!input.customerId && !!input?.customerName) {
-          const { data: customers } = await client.searchCustomers({
-            name: input.customerName,
-          });
+          const { data: customers, error: customersError } =
+            await client.searchCustomers({
+              name: input.customerName,
+            });
+
+          if (customersError) {
+            throw new Error(
+              `Error searching customers: ${customersError.message}`
+            );
+          }
+
           const customer = customers?.data?.find(
             (customer) =>
               customer.name?.toLowerCase() === input.customerName?.toLowerCase()
@@ -149,13 +157,16 @@ export function buildTools() {
           input.customerId = customer.id;
         }
 
-        const { data: slots } = await client.listSlots({
+        const { data: slots, error: slotsError } = await client.listSlots({
           from: input.from,
           publicationId: input.publicationId,
           to: input.to,
           status: input.status,
           limit: input.limit,
         });
+        if (slotsError) {
+          throw new Error(`Error listing slots: ${slotsError.message}`);
+        }
         const slotsByCustomer = slots?.data.filter(
           (slot) => slot?.customer?.id === input.customerId
         );

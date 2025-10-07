@@ -1,6 +1,6 @@
 export interface ErrorResponse {
   statusCode: number;
-  message: string[];
+  message: string;
   error: string;
   options?: GetOptions;
 }
