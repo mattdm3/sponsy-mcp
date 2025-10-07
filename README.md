@@ -71,4 +71,4 @@ You can get the absolute path to your build script by right-clicking on the `/di
 Close and reopen Claude Desktop. Verify that the `sponsy-server` tool is available in the Claude developer settings.
 
 
-Chat with Claude and tell list your publ
+Chat with Claude and tell list your publications!
