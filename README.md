@@ -56,7 +56,8 @@ Add the following config:
                 "path_to_index.js"// ie "/Users/home/sponsy-mcp/dist/index.js"
                 ],
         "env": {
-              "NODE_OPTIONS": "--no-deprecation"
+              "NODE_OPTIONS": "--no-deprecation",
+              "SPONSY_API_KEY": "_YOUR_API_"
             }
         }
   }
